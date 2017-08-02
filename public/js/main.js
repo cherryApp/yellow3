@@ -8,3 +8,14 @@ function delRequest(index) {
     };
     xhr.send();
 }
+
+function getAll(table) {
+    var url = "/api/"+table;
+    var xhr = new XMLHttpRequest;
+    xhr.open("get", url);
+    xhr.onload = function(ev) {
+        var data = JSON.parse(ev.target.response);
+        console.log(data);
+    };
+    xhr.send();
+}
