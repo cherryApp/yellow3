@@ -18,12 +18,41 @@ const server = http.createServer( function(req, res) {
     }
 });
 
+function indexer(filePath, fn) {
+    fs.readFile(filePath, "utf8", function(err, data) {
+        if (err) {
+            return console.log(err);
+        }
+
+        let jsonData = JSON.parse(data);
+
+        // TODO: indexelés jsonData.data
+
+        // Visszaírás.        
+        fs.writeFile(filePath, JSON.stringify(jsonData), "utf8", function(err, data) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("Index done.");
+            fn();
+        });
+    });
+}
+
 // Get kérések kiszolgálása.
 function getResponse(req, res) {
     if (req.url == "/") {
         sendFile(res, "./view/index.html");
     } else if (apiRegex.test(req.url)) {
         let urlParts = req.url.match(apiRegex)[1].split('/');
+
+        if (urlParts[1] == "index") {
+            indexer("./api/"+urlParts[0]+".json", function() {
+                res.end("ok");
+            });
+            return;
+        }
+
         fs.readFile("./api/"+urlParts[0]+".json", "utf8", function(err, data) {
             if (err) {
                 return res.end("file not found");
