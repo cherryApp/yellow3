@@ -1,1 +1,1 @@
-alert("Én vagyok a main.js.");
+// alert("Én vagyok a main.js.");
