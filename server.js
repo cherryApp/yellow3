@@ -53,9 +53,7 @@ function getResponse(req, res) {
                 res.end("ok");
             });
             return;
-        }
-
-        
+        }        
 
         fs.readFile("./api/"+urlParts[0]+".json", "utf8", function(err, data) {
             if (err) {
@@ -67,6 +65,10 @@ function getResponse(req, res) {
             // Stringify item.
             // Send item to the browser.
             let jsonData = JSON.parse(data);
+            if (urlParts.length == 1) {
+                return res.end( JSON.stringify(jsonData.data) );
+            }
+
             var clubIndex = {};
             for (i=0; i< jsonData.data.length; i++) {
                 
