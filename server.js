@@ -26,7 +26,6 @@ function indexer(filePath, fn) {
 
         let jsonData = JSON.parse(data);
 
-        // TODO: indexelés jsonData.data
         for (var i = 0; i < jsonData.data.length; i++) {
             jsonData.data[i].id = (i+1);
         }
@@ -47,7 +46,7 @@ function getResponse(req, res) {
     if (req.url == "/") {
         sendFile(res, "./view/index.html");
     } else if (apiRegex.test(req.url)) {
-        let urlParts = req.url.match(apiRegex)[1].split('/');
+        const urlParts = req.url.match(apiRegex)[1].split('/');
 
         if (urlParts[1] == "index") {
             indexer("./api/"+urlParts[0]+".json", function() {
@@ -56,16 +55,37 @@ function getResponse(req, res) {
             return;
         }
 
+        
+
         fs.readFile("./api/"+urlParts[0]+".json", "utf8", function(err, data) {
             if (err) {
                 return res.end("file not found");
             }
-            res.end( data );            
+
+            // Parse data.
+            // Get item from data array by id.
+            // Stringify item.
+            // Send item to the browser.
+            let jsonData = JSON.parse(data);
+            var clubIndex = {};
+            for (i=0; i< jsonData.data.length; i++) {
+                
+                if (jsonData.data[i].id == urlParts[1]) {
+                    clubIndex = (jsonData.data[i]);
+                    break;
+                }
+            }
+            res.end(JSON.stringify(clubIndex));          
         });
 
     } else {
         sendFile(res, "./public" + req.url);
     }
+}
+
+// TODO: delete functionality.
+function delResponse(req, res) {
+    res.end("Delete: "+req.url);
 }
 
 // Index file kiszolgálása.
