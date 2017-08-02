@@ -27,9 +27,12 @@ function indexer(filePath, fn) {
         let jsonData = JSON.parse(data);
 
         // TODO: indexelés jsonData.data
+        for (var i = 0; i < jsonData.data.length; i++) {
+            jsonData.data[i].id = (i+1);
+        }
 
         // Visszaírás.        
-        fs.writeFile(filePath, JSON.stringify(jsonData), "utf8", function(err, data) {
+        fs.writeFile(filePath, JSON.stringify(jsonData, null, 4), "utf8", function(err, data) {
             if (err) {
                 return console.log(err);
             }
