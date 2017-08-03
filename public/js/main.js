@@ -15,7 +15,58 @@ function getAll(table) {
     xhr.open("get", url);
     xhr.onload = function(ev) {
         var data = JSON.parse(ev.target.response);
-        console.log(data);
+        fillTable(data);
     };
     xhr.send();
+}
+
+// Adatok lekérése a szerverről.
+getAll("club");
+
+// Táblázat kitöltése.
+function fillTable(rows) {
+    // HTML elemek keresése.
+    var table = document.querySelector("#crudTable");
+    var thead = table.querySelector("thead");
+    var tbody = table.querySelector("tbody");
+
+    // Tábla kiöblítése.
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
+
+    // Legeneráljuk a fejléceket.
+    for (var k in rows[0]) {
+        var th = document.createElement("th");
+        th.innerHTML = k;
+        thead.appendChild(th);
+    }
+
+    // Legeneráljuk a táblázat törzsét.
+    for (var k in rows) {
+        var tr = document.createElement('tr');
+        for (var j in rows[k]) {
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            td.appendChild(input);
+            input.value = rows[k][j];
+            tr.appendChild(td);
+        }
+
+        // Gombok.
+        var td = document.createElement("td");
+        var group = document.createElement("div");
+        group.className = "btn-group";
+        var btn1 = document.createElement("button");
+        var btn2 = document.createElement("button");
+        btn1.className = "btn btn-info";
+        btn1.innerHTML = "frissít";
+        btn2.className = "btn btn-danger";
+        btn2.innerHTML = "töröl";
+        group.appendChild(btn1);
+        group.appendChild(btn2);
+        td.appendChild(group);
+        tr.appendChild(td);
+
+        tbody.appendChild(tr);
+    }
 }
