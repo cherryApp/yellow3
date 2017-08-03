@@ -90,6 +90,17 @@ function delResponse(req, res) {
     res.end("Delete: "+req.url);
 }
 
+// Handle Post request.
+function postResponse(req, res) {
+    var data = "";
+    req.on('data', function(pack) {
+        data += pack;
+    });
+    req.on('end', function() {
+        res.end( data );
+    });
+}
+
 // Index file kiszolgálása.
 function sendFile(res, filePath) {
     fs.readFile(filePath, "utf8", function(err, data) {
