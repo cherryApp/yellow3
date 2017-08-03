@@ -49,6 +49,7 @@ function fillTable(rows) {
             var input = document.createElement("input");
             td.appendChild(input);
             input.value = rows[k][j];
+            input.key = j;
             tr.appendChild(td);
         }
 
@@ -56,12 +57,31 @@ function fillTable(rows) {
         var td = document.createElement("td");
         var group = document.createElement("div");
         group.className = "btn-group";
+
+        // Frissítés.
         var btn1 = document.createElement("button");
-        var btn2 = document.createElement("button");
         btn1.className = "btn btn-info";
         btn1.innerHTML = "frissít";
+        btn1.addEventListener("click", function(ev) {
+            // A gomb szülő tr megkeresése.
+            var parentTr = ev.target.parentElement.parentElement.parentElement;
+            
+            // Az input elemek keresése a szülő tr-ben.
+            var inputs = parentTr.querySelectorAll("input");
+            var row = {};
+            for (var k in inputs) {
+                if (inputs[k].value) {
+                    row[inputs[k].key] = inputs[k].value;
+                }
+            }
+            console.log(row);
+        });
+        
+        // Törlés.
+        var btn2 = document.createElement("button");
         btn2.className = "btn btn-danger";
         btn2.innerHTML = "töröl";
+
         group.appendChild(btn1);
         group.appendChild(btn2);
         td.appendChild(group);
