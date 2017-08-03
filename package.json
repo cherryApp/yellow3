@@ -1,0 +1,24 @@
+{
+  "name": "yellow3",
+  "version": "1.0.0",
+  "description": "yellowroad test app",
+  "main": "server.js",
+  "dependencies": {
+    "mysql": "^2.14.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cherryApp/yellow3.git"
+  },
+  "author": "j.cserko@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cherryApp/yellow3/issues"
+  },
+  "homepage": "https://github.com/cherryApp/yellow3#readme"
+}

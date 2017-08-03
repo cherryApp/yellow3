@@ -2,6 +2,16 @@ const http = require("http");
 const fs = require("fs");
 const apiRegex = /\/api\/(.*)/;
 
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'football',
+  password : 'Exz2Vcc9GJFYVe78',
+  database : 'football'
+});
+ 
+connection.connect();
+
 const server = http.createServer( function(req, res) {
     console.log(req.url);
     let method = req.method.toLowerCase();
@@ -47,38 +57,12 @@ function getResponse(req, res) {
         sendFile(res, "./view/index.html");
     } else if (apiRegex.test(req.url)) {
         const urlParts = req.url.match(apiRegex)[1].split('/');
-
-        if (urlParts[1] == "index") {
-            indexer("./api/"+urlParts[0]+".json", function() {
-                res.end("ok");
-            });
-            return;
-        }        
-
-        fs.readFile("./api/"+urlParts[0]+".json", "utf8", function(err, data) {
-            if (err) {
-                return res.end("file not found");
-            }
-
-            // Parse data.
-            // Get item from data array by id.
-            // Stringify item.
-            // Send item to the browser.
-            let jsonData = JSON.parse(data);
-            if (urlParts.length == 1) {
-                return res.end( JSON.stringify(jsonData.data) );
-            }
-
-            var clubIndex = {};
-            for (i=0; i< jsonData.data.length; i++) {
-                
-                if (jsonData.data[i].id == urlParts[1]) {
-                    clubIndex = (jsonData.data[i]);
-                    break;
-                }
-            }
-            res.end(JSON.stringify(clubIndex));          
-        });
+        // Select írása.
+        // Az eredmény visszaküldése stringify formátumban.
+        connection.query(`SELECT * FROM ${urlParts[0]}`, function(err, results) {
+            res.end(JSON.stringify(results));
+        })
+        
 
     } else {
         sendFile(res, "./public" + req.url);
@@ -98,6 +82,27 @@ function postResponse(req, res) {
     });
     req.on('end', function() {
         res.end( data );
+    });
+}
+
+// Create new record.
+function putResponse(req, res) {
+    var data = "";
+    req.on('data', function(pack) {
+        data += pack;
+    });
+    req.on('end', function() {
+        data = JSON.parse(data);
+        let q = `
+            INSERT INTO club (name, code, fkey)
+            VALUES ('${data.name}', '${data.code}', '${data.key}');        
+        `;
+
+        connection.query(q, function(err, results){
+            res.end( JSON.stringify(results) );
+        });
+        
+    
     });
 }
 

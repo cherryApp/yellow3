@@ -21,7 +21,15 @@ function updateRequest(obj) {
 }
 
 // Send create request.
-
+function createRequest(obj) {
+    var url = "/api/club";
+    var xhr = new XMLHttpRequest;
+    xhr.open("put", url);
+    xhr.onload = function(ev) {
+        console.log(ev.target.response);
+    };
+    xhr.send(JSON.stringify(obj));
+}
 
 function getAll(table) {
     var url = "/api/"+table;
@@ -127,6 +135,19 @@ function addCreateRow(parent, obj) {
     btn.innerHTML = "<span class='glyphicon glyphicon-plus'></span>";
     td.appendChild(btn);
     tr.appendChild(td);
+
+    // Kattintás kezelése.
+    btn.addEventListener("click", function(ev) {
+        // var btn = ev.target;
+        var tr = this.parentElement.parentElement;
+        var inputs = tr.querySelectorAll("input");
+        var obj = {};
+        for (var i = 0; i < inputs.length; i++) {
+            obj[inputs[i].key] = inputs[i].value;
+        }
+        console.log(obj);
+        createRequest(obj);
+    });
 
     parent.appendChild(tr);
 }
